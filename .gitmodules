@@ -13,3 +13,6 @@
 [submodule "utils/optimin/EvalMaxSAT"]
 	path = utils/optimin/EvalMaxSAT
 	url = https://github.com/FlorentAvellaneda/EvalMaxSAT
+[submodule "cs_mode/proc-trace"]
+	path = cs_mode/proc-trace
+	url = git@github.com:RICSecLab/proc-trace.git

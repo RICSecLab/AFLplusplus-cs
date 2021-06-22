@@ -30,6 +30,7 @@ afl-g++-fast
 afl-gotcpu
 afl-ld
 afl-ld-lto
+afl-proc-trace
 afl-qemu-trace
 afl-showmap
 afl-tmin
