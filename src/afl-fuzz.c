@@ -114,6 +114,7 @@ static void usage(u8 *argv0, int more_help) {
       "  -m megs       - memory limit for child process (%u MB, 0 = no limit "
       "[default])\n"
       "  -O            - use binary-only instrumentation (FRIDA mode)\n"
+      "  -P            - use binary-only instrumentation (CoreSight mode)\n"
       "  -Q            - use binary-only instrumentation (QEMU mode)\n"
       "  -U            - use unicorn-based instrumentation (Unicorn mode)\n"
       "  -W            - use qemu-based instrumentation with Wine (Wine "
@@ -434,7 +435,7 @@ int main(int argc, char **argv_orig, char **envp) {
 
   while ((opt = getopt(
               argc, argv,
-              "+b:B:c:CdDe:E:hi:I:f:F:l:L:m:M:nNOo:p:RQs:S:t:T:UV:Wx:Z")) > 0) {
+              "+b:B:c:CdDe:E:hi:I:f:F:l:L:m:M:nNOo:Pp:RQs:S:t:T:UV:Wx:Z")) > 0) {
 
     switch (opt) {
 
@@ -838,6 +839,15 @@ int main(int argc, char **argv_orig, char **envp) {
 
         break;
 
+      case 'P':                                             /* CoreSight mode */
+
+        if (afl->fsrv.cs_mode) { FATAL("Multiple -P options not supported"); }
+        afl->fsrv.cs_mode = 1;
+
+        if (!mem_limit_given) { afl->fsrv.mem_limit = MEM_LIMIT; }
+
+        break;
+
       case 'Q':                                                /* QEMU mode */
 
         if (afl->fsrv.qemu_mode) { FATAL("Multiple -Q options not supported"); }
@@ -1211,6 +1221,7 @@ int main(int argc, char **argv_orig, char **envp) {
 
     if (afl->crash_mode) { FATAL("-C and -n are mutually exclusive"); }
     if (afl->fsrv.frida_mode) { FATAL("-O and -n are mutually exclusive"); }
+    if (afl->fsrv.cs_mode) { FATAL("-P and -n are mutually exclusive"); }
     if (afl->fsrv.qemu_mode) { FATAL("-Q and -n are mutually exclusive"); }
     if (afl->unicorn_mode) { FATAL("-U and -n are mutually exclusive"); }
 
@@ -1457,6 +1468,7 @@ int main(int argc, char **argv_orig, char **envp) {
       }
 
     } else {
+      /* TODO: handle afl-proc-trace */
 
       setenv("LD_PRELOAD", getenv("AFL_PRELOAD"), 1);
       setenv("DYLD_INSERT_LIBRARIES", getenv("AFL_PRELOAD"), 1);
@@ -1652,7 +1664,7 @@ int main(int argc, char **argv_orig, char **envp) {
     }
 
     if (!afl->fsrv.qemu_mode && !afl->fsrv.frida_mode &&
-        !afl->non_instrumented_mode) {
+        !afl->fsrv.cs_mode && !afl->non_instrumented_mode) {
 
       check_binary(afl, afl->cmplog_binary);
 
@@ -1697,6 +1709,11 @@ int main(int argc, char **argv_orig, char **envp) {
 
     }
 
+  } if (afl->fsrv.cs_mode) {
+
+      use_argv = get_cs_argv(argv[0], &afl->fsrv.target_path, argc - optind,
+                               argv + optind);
+
   } else {
 
     use_argv = argv + optind;
@@ -1704,7 +1721,8 @@ int main(int argc, char **argv_orig, char **envp) {
   }
 
   if (afl->non_instrumented_mode || afl->fsrv.qemu_mode ||
-      afl->fsrv.frida_mode || afl->unicorn_mode) {
+      afl->fsrv.frida_mode || afl->fsrv.cs_mode ||
+      afl->unicorn_mode) {
 
     map_size = afl->fsrv.real_map_size = afl->fsrv.map_size = MAP_SIZE;
     afl->virgin_bits = ck_realloc(afl->virgin_bits, map_size);
@@ -1724,7 +1742,7 @@ int main(int argc, char **argv_orig, char **envp) {
       afl_shm_init(&afl->shm, afl->fsrv.map_size, afl->non_instrumented_mode);
 
   if (!afl->non_instrumented_mode && !afl->fsrv.qemu_mode &&
-      !afl->unicorn_mode && !afl->fsrv.frida_mode &&
+      !afl->unicorn_mode && !afl->fsrv.frida_mode && !afl->fsrv.cs_mode &&
       !afl->afl_env.afl_skip_bin_check) {
 
     if (map_size <= DEFAULT_SHMEM_SIZE) {
@@ -1777,6 +1795,7 @@ int main(int argc, char **argv_orig, char **envp) {
     afl_fsrv_init_dup(&afl->cmplog_fsrv, &afl->fsrv);
     // TODO: this is semi-nice
     afl->cmplog_fsrv.trace_bits = afl->fsrv.trace_bits;
+    afl->cmplog_fsrv.cs_mode = afl->fsrv.cs_mode;
     afl->cmplog_fsrv.qemu_mode = afl->fsrv.qemu_mode;
     afl->cmplog_fsrv.frida_mode = afl->fsrv.frida_mode;
     afl->cmplog_fsrv.cmplog_binary = afl->cmplog_binary;
@@ -1786,7 +1805,7 @@ int main(int argc, char **argv_orig, char **envp) {
          afl->cmplog_fsrv.map_size < map_size) &&
         !afl->non_instrumented_mode && !afl->fsrv.qemu_mode &&
         !afl->fsrv.frida_mode && !afl->unicorn_mode &&
-        !afl->afl_env.afl_skip_bin_check) {
+        !afl->fsrv.cs_mode && !afl->afl_env.afl_skip_bin_check) {
 
       afl->cmplog_fsrv.map_size = MAX(map_size, (u32)DEFAULT_SHMEM_SIZE);
       char vbuf[16];

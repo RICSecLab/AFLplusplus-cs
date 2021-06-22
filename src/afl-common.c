@@ -204,6 +204,36 @@ void argv_cpy_free(char **argv) {
 
 }
 
+/* Rewrite argv for CoreSight process tracer. */
+
+char **get_cs_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
+
+  if (unlikely(getenv("AFL_CS_CUSTOM_BIN"))) {
+
+    WARNF(
+        "AFL_CS_CUSTOM_BIN is enabled. "
+        "You must run your target under afl-proc-trace on your own!");
+    return argv;
+
+  }
+
+  char **new_argv = ck_alloc(sizeof(char *) * (argc + 5));
+  if (unlikely(!new_argv)) { FATAL("Illegal amount of arguments specified"); }
+
+  memcpy(&new_argv[4], &argv[1], (int)(sizeof(char *)) * (argc - 1));
+  new_argv[argc + 4] = NULL;
+
+  new_argv[3] = *target_path_p;
+  new_argv[2] = "--";
+  new_argv[1] = "--forkserver=1";
+
+  /* Now we need to actually find the proc-trace binary to put in argv[0]. */
+
+  *target_path_p = new_argv[0] = find_afl_binary(own_loc, "afl-proc-trace");
+  return new_argv;
+
+}
+
 /* Rewrite argv for QEMU. */
 
 char **get_qemu_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {

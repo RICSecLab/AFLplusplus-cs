@@ -321,12 +321,13 @@ void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
           afl->q_testcase_cache_count, afl->q_testcase_evictions,
           afl->use_banner, afl->unicorn_mode ? "unicorn" : "",
           afl->fsrv.qemu_mode ? "qemu " : "",
+          afl->fsrv.cs_mode ? "coresight" : "",
           afl->non_instrumented_mode ? " non_instrumented " : "",
           afl->no_forkserver ? "no_fsrv " : "", afl->crash_mode ? "crash " : "",
           afl->persistent_mode ? "persistent " : "",
           afl->shmem_testcase_mode ? "shmem_testcase " : "",
           afl->deferred_mode ? "deferred " : "",
-          (afl->unicorn_mode || afl->fsrv.qemu_mode ||
+          (afl->unicorn_mode || afl->fsrv.qemu_mode || afl->fsrv.cs_mode ||
            afl->non_instrumented_mode || afl->no_forkserver ||
            afl->crash_mode || afl->persistent_mode || afl->deferred_mode)
               ? ""
@@ -1238,7 +1239,7 @@ void show_init_stats(afl_state_t *afl) {
 
   // SAYF("\n");
 
-  if (avg_us > ((afl->fsrv.qemu_mode || afl->unicorn_mode) ? 50000 : 10000)) {
+  if (avg_us > ((afl->fsrv.cs_mode || afl->fsrv.qemu_mode || afl->unicorn_mode) ? 50000 : 10000)) {
 
     WARNF(cLRD "The target binary is pretty slow! See %s/perf_tips.md.",
           doc_path);
