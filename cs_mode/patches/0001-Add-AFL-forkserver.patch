@@ -1,8 +1,8 @@
 diff --git a/glibc/elf/rtld.c b/glibc/elf/rtld.c
-index 596b6ac3..48482938 100644
+index 596b6ac3..848185eb 100644
 --- a/glibc/elf/rtld.c
 +++ b/glibc/elf/rtld.c
-@@ -169,6 +169,74 @@ uintptr_t __pointer_chk_guard_local
+@@ -169,6 +169,80 @@ uintptr_t __pointer_chk_guard_local
  strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
  #endif
  
@@ -21,6 +21,8 @@ index 596b6ac3..48482938 100644
 +
 +#define FORKSRV_FD 198
 +
++#define AFLCS_ENABLE "__AFLCS_ENABLE"
++
 +/* We use this additional AFLCS_# AFLCS_#+1 pair to communicate with proxy */
 +#define AFLCS_FORKSRV_FD (FORKSRV_FD - 3)
 +#define AFLCS_RTLD_SNIPPET do { __cs_start_forkserver(); } while(0)
@@ -31,6 +33,10 @@ index 596b6ac3..48482938 100644
 +  int status;
 +  pid_t child_pid;
 +  static char tmp[4];
++
++  if (!getenv(AFLCS_ENABLE)) {
++    return;
++  }
 +
 +  if (write(AFLCS_FORKSRV_FD + 1, tmp, 4) != 4) {
 +    _exit(-1);
@@ -77,7 +83,7 @@ index 596b6ac3..48482938 100644
  /* Check that AT_SECURE=0, or that the passed name does not contain
     directories and is not overly long.  Reject empty names
     unconditionally.  */
-@@ -588,6 +656,12 @@ _dl_start (void *arg)
+@@ -588,6 +662,12 @@ _dl_start (void *arg)
  # define ELF_MACHINE_START_ADDRESS(map, start) (start)
  #endif
  
