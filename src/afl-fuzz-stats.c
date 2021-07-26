@@ -285,7 +285,7 @@ void write_stats_file(afl_state_t *afl, u32 t_bytes, double bitmap_cvg,
           "afl_banner        : %s\n"
           "afl_version       : " VERSION
           "\n"
-          "target_mode       : %s%s%s%s%s%s%s%s%s\n"
+          "target_mode       : %s%s%s%s%s%s%s%s%s%s\n"
           "command_line      : %s\n",
           (afl->start_time - afl->prev_run_time) / 1000, cur_time / 1000,
           (afl->prev_run_time + cur_time - afl->start_time) / 1000,
