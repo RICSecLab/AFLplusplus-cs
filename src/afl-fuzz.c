@@ -1709,7 +1709,7 @@ int main(int argc, char **argv_orig, char **envp) {
 
     }
 
-  } if (afl->fsrv.cs_mode) {
+  } else if (afl->fsrv.cs_mode) {
 
       use_argv = get_cs_argv(argv[0], &afl->fsrv.target_path, argc - optind,
                                argv + optind);
