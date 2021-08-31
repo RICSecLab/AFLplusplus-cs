@@ -1,4 +1,4 @@
 #!/bin/bash
 
-make -C proc-trace
-cp proc-trace/proc-trace ../afl-proc-trace
+make -C proc-trace -j$(nproc)
+cp proc-trace/cs-proxy ../afl-proc-trace
