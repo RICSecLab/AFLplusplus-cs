@@ -689,7 +689,7 @@ static void set_up_environment(afl_forkserver_t *fsrv, char **argv) {
       setenv("DYLD_INSERT_LIBRARIES", frida_afl_preload, 1);
 
     } else {
-      /* TODO: handle afl-proc-trace */
+      /* TODO: handle afl-cs-proxy */
 
       setenv("LD_PRELOAD", getenv("AFL_PRELOAD"), 1);
       setenv("DYLD_INSERT_LIBRARIES", getenv("AFL_PRELOAD"), 1);

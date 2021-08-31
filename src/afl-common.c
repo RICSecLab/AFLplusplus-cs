@@ -212,7 +212,7 @@ char **get_cs_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
 
     WARNF(
         "AFL_CS_CUSTOM_BIN is enabled. "
-        "You must run your target under afl-proc-trace on your own!");
+        "You must run your target under afl-cs-proxy on your own!");
     return argv;
 
   }
@@ -227,9 +227,9 @@ char **get_cs_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
   new_argv[2] = "--";
   new_argv[1] = "--forkserver=1";
 
-  /* Now we need to actually find the proc-trace binary to put in argv[0]. */
+  /* Now we need to actually find the cs-proxy binary to put in argv[0]. */
 
-  *target_path_p = new_argv[0] = find_afl_binary(own_loc, "afl-proc-trace");
+  *target_path_p = new_argv[0] = find_afl_binary(own_loc, "afl-cs-proxy");
   return new_argv;
 
 }
