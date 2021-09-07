@@ -217,15 +217,14 @@ char **get_cs_argv(u8 *own_loc, u8 **target_path_p, int argc, char **argv) {
 
   }
 
-  char **new_argv = ck_alloc(sizeof(char *) * (argc + 5));
+  char **new_argv = ck_alloc(sizeof(char *) * (argc + 4));
   if (unlikely(!new_argv)) { FATAL("Illegal amount of arguments specified"); }
 
-  memcpy(&new_argv[4], &argv[1], (int)(sizeof(char *)) * (argc - 1));
-  new_argv[argc + 4] = NULL;
+  memcpy(&new_argv[3], &argv[1], (int)(sizeof(char *)) * (argc - 1));
+  new_argv[argc + 3] = NULL;
 
-  new_argv[3] = *target_path_p;
-  new_argv[2] = "--";
-  new_argv[1] = "--forkserver=1";
+  new_argv[2] = *target_path_p;
+  new_argv[1] = "--";
 
   /* Now we need to actually find the cs-proxy binary to put in argv[0]. */
 
