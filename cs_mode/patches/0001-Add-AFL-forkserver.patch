@@ -1,7 +1,7 @@
-diff --git a/glibc/elf/rtld.c b/glibc/elf/rtld.c
+diff --git a/glibc-2.33/elf/rtld.c b/glibc-2.33/elf/rtld.c
 index 596b6ac3..2ee270d4 100644
---- a/glibc/elf/rtld.c
-+++ b/glibc/elf/rtld.c
+--- a/glibc-2.33/elf/rtld.c
++++ b/glibc-2.33/elf/rtld.c
 @@ -169,6 +169,99 @@ uintptr_t __pointer_chk_guard_local
  strong_alias (__pointer_chk_guard_local, __pointer_chk_guard)
  #endif

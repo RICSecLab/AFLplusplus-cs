@@ -18,56 +18,30 @@ git submodule update --init --recursive
 
 ### Build coresight-trace
 
-There are some notes on building coresight-trace. Refer to the [README](https://github.com/RICSecLab/coresight-trace/blob/master/README.md) for the details. Run the helper shell script.
+There are some notes on building coresight-trace. Refer to the [README](https://github.com/RICSecLab/coresight-trace/blob/master/README.md) for the details. Run make in the `cs_mode` directory:
 
 ```bash
-./build_coresight_trace_support.sh
+make build
 ```
 
 Make sure `cs-proxy` is placed in the AFL++ root directory as `afl-cs-proxy`.
 
-### Build patchelf
-
-Build ELF patch utility patchelf.
-
-```bash
-cd patchelf
-./bootstrap.sh
-./configure
-make
-make check
-```
-
-### Build glibc
-
-Apply the patch, and install the glibc.
-
-```bash
-patch -p1 < patches/0001-Add-AFL-forkserver.patch
-mkdir -p glibc/build
-cd glibc/build
-../configure --prefix=$PREFIX
-make
-make install DESTDIR=$DESTDIR
-```
-
 ### Patch COTS binary
 
-Patch the target ELF binary to link to the patched glibc.
+The fork server mode requires patchelf and the patched glibc. The dependency build can be done by just run make:
 
 ```bash
-patchelf --set-interpreter $DESTDIR/lib/ld-linux-aarch64.so.1 \
-  --set-rpath $DESTDIR/lib \
-  --output $BIN-patched \
-  $BIN
+make patch TARGET=$BIN
 ```
+
+The above make command builds and installs the dependencies to `$PREFIX` (default to `$PWD/.local`) at the first time. Then, it runs `patchelf` to `$BIN` with output `$OUTPUT` (`$BIN.patched` by default).
 
 ### Run afl-fuzz
 
 Run customized AFL++ with `-P` option to use CoreSight mode.
 
 ```bash
-sudo afl-fuzz -P -i input -o output -- $BIN-patched @@
+sudo afl-fuzz -P -i input -o output -- $OUTPUT @@
 ```
 
 ## Environment Variables

@@ -13,9 +13,6 @@
 [submodule "utils/optimin/EvalMaxSAT"]
 	path = utils/optimin/EvalMaxSAT
 	url = https://github.com/FlorentAvellaneda/EvalMaxSAT
-[submodule "cs_mode/glibc"]
-	path = cs_mode/glibc
-	url = https://sourceware.org/git/glibc.git
 [submodule "cs_mode/patchelf"]
 	path = cs_mode/patchelf
 	url = https://github.com/NixOS/patchelf.git
