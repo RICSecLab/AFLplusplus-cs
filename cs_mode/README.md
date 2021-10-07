@@ -8,7 +8,7 @@ NOTE: CoreSight mode is in the early development stage. Not applicable for produ
 
 Please read the [RICSec/coresight-trace README](https://github.com/RICSecLab/coresight-trace/blob/master/README.md) and check the prerequisites before getting started.
 
-CoreSight mode supports the AFL fork server mode to reduce fork system call overhead. To support it for binary-only fuzzing, it needs to modify the target ELF binary to re-link to the patched glibc. We employ this design from [PTrix](https://github.com/junxzm1990/afl-pt).
+CoreSight mode supports the AFL fork server mode to reduce `exec` system call overhead. To support it for binary-only fuzzing, it needs to modify the target ELF binary to re-link to the patched glibc. We employ this design from [PTrix](https://github.com/junxzm1990/afl-pt).
 
 Check out all the git submodules in the `cs_mode` directory:
 
