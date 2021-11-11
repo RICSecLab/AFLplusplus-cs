@@ -17,6 +17,8 @@ GLIBC_LDSO?=$(PREFIX)/lib/ld-linux-aarch64.so.1
 
 OUTPUT?="$(TARGET).patched"
 
+all: build
+
 build:
 	git submodule update --init --recursive $(CS_TRACE)
 	$(MAKE) -C $(CS_TRACE)
@@ -51,4 +53,4 @@ $(GLIBC_LDSO): | $(GLIBC_NAME).tar.xz
 $(GLIBC_NAME).tar.xz:
 	wget -O $@ $(GLIBC_URL_BASE)/$@
 
-.PHONY: build patch
+.PHONY: all build patch
