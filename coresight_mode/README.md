@@ -38,10 +38,10 @@ The above make command builds and installs the dependencies to `$PREFIX` (defaul
 
 ### Run afl-fuzz
 
-Run customized AFL++ with `-P` option to use CoreSight mode.
+Run `afl-fuzz` with `-A` option to use CoreSight mode.
 
 ```bash
-sudo afl-fuzz -P -i input -o output -- $OUTPUT @@
+sudo afl-fuzz -A -i input -o output -- $OUTPUT @@
 ```
 
 ## Environment Variables
