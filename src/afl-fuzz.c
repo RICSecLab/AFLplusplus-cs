@@ -1466,7 +1466,8 @@ int main(int argc, char **argv_orig, char **envp) {
       }
 
     } else {
-      /* TODO: handle afl-proc-trace */
+
+      /* CoreSight mode uses the default behavior. */
 
       setenv("LD_PRELOAD", getenv("AFL_PRELOAD"), 1);
       setenv("DYLD_INSERT_LIBRARIES", getenv("AFL_PRELOAD"), 1);

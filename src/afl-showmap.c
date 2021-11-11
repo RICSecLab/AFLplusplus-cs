@@ -689,7 +689,8 @@ static void set_up_environment(afl_forkserver_t *fsrv, char **argv) {
       setenv("DYLD_INSERT_LIBRARIES", frida_afl_preload, 1);
 
     } else {
-      /* TODO: handle afl-cs-proxy */
+
+      /* CoreSight mode uses the default behavior. */
 
       setenv("LD_PRELOAD", getenv("AFL_PRELOAD"), 1);
       setenv("DYLD_INSERT_LIBRARIES", getenv("AFL_PRELOAD"), 1);
@@ -1062,7 +1063,9 @@ int main(int argc, char **argv_orig, char **envp) {
 
         break;
 
-      case 'P':
+      /* FIXME: We want to use -P for consistency, but it is already unsed for
+       * undocumenetd feature "Another afl-cmin specific feature." */
+      case 'P':                                           /* CoreSight mode */
 
         if (fsrv->cs_mode) { FATAL("Multiple -P options not supported"); }
 
