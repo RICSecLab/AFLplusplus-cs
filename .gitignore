@@ -95,4 +95,5 @@ utils/optimin/optimin
 utils/persistent_mode/persistent_demo
 utils/persistent_mode/persistent_demo_new
 utils/persistent_mode/test-instr
-!cs_mode/coresight-trace
+!coresight_mode
+!coresight_mode/coresight-trace
