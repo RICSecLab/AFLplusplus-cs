@@ -113,8 +113,8 @@ static void usage(u8 *argv0, int more_help) {
       "maximum.\n"
       "  -m megs       - memory limit for child process (%u MB, 0 = no limit "
       "[default])\n"
+      "  -A            - use binary-only instrumentation (CoreSight mode)\n"
       "  -O            - use binary-only instrumentation (FRIDA mode)\n"
-      "  -P            - use binary-only instrumentation (CoreSight mode)\n"
       "  -Q            - use binary-only instrumentation (QEMU mode)\n"
       "  -U            - use unicorn-based instrumentation (Unicorn mode)\n"
       "  -W            - use qemu-based instrumentation with Wine (Wine "
@@ -435,7 +435,7 @@ int main(int argc, char **argv_orig, char **envp) {
 
   while ((opt = getopt(
               argc, argv,
-              "+b:B:c:CdDe:E:hi:I:f:F:l:L:m:M:nNOo:Pp:RQs:S:t:T:UV:Wx:Z")) > 0) {
+              "+Ab:B:c:CdDe:E:hi:I:f:F:l:L:m:M:nNOo:p:RQs:S:t:T:UV:Wx:Z")) > 0) {
 
     switch (opt) {
 
@@ -826,6 +826,13 @@ int main(int argc, char **argv_orig, char **envp) {
         afl->use_banner = optarg;
         break;
 
+      case 'A':                                           /* CoreSight mode */
+
+        if (afl->fsrv.cs_mode) { FATAL("Multiple -A options not supported"); }
+        afl->fsrv.cs_mode = 1;
+
+        break;
+
       case 'O':                                               /* FRIDA mode */
 
         if (afl->fsrv.frida_mode) {
@@ -836,15 +843,6 @@ int main(int argc, char **argv_orig, char **envp) {
 
         afl->fsrv.frida_mode = 1;
         if (get_afl_env("AFL_USE_FASAN")) { afl->fsrv.frida_asan = 1; }
-
-        break;
-
-      case 'P':                                             /* CoreSight mode */
-
-        if (afl->fsrv.cs_mode) { FATAL("Multiple -P options not supported"); }
-        afl->fsrv.cs_mode = 1;
-
-        if (!mem_limit_given) { afl->fsrv.mem_limit = MEM_LIMIT; }
 
         break;
 
@@ -1221,8 +1219,8 @@ int main(int argc, char **argv_orig, char **envp) {
 
     if (afl->crash_mode) { FATAL("-C and -n are mutually exclusive"); }
     if (afl->fsrv.frida_mode) { FATAL("-O and -n are mutually exclusive"); }
-    if (afl->fsrv.cs_mode) { FATAL("-P and -n are mutually exclusive"); }
     if (afl->fsrv.qemu_mode) { FATAL("-Q and -n are mutually exclusive"); }
+    if (afl->fsrv.cs_mode) { FATAL("-A and -n are mutually exclusive"); }
     if (afl->unicorn_mode) { FATAL("-U and -n are mutually exclusive"); }
 
   }
