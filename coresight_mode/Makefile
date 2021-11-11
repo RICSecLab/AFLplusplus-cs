@@ -14,4 +14,8 @@ patch:
 	@echo trying to use GNU make...
 	@gmake patch || echo please install GNUmake
 
-.PHONY: all build patch
+clean:
+	@echo trying to use GNU make...
+	@gmake clean || echo please install GNUmake
+
+.PHONY: all build patch clean

@@ -53,4 +53,7 @@ $(GLIBC_LDSO): | $(GLIBC_NAME).tar.xz
 $(GLIBC_NAME).tar.xz:
 	wget -O $@ $(GLIBC_URL_BASE)/$@
 
-.PHONY: all build patch
+clean:
+	$(MAKE) -C $(CS_TRACE) clean
+
+.PHONY: all build patch clean
