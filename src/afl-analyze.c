@@ -1094,8 +1094,7 @@ int main(int argc, char **argv_orig, char **envp) {
 
   } else if (cs_mode) {
 
-    use_argv =
-        get_cs_argv(argv[0], &target_path, argc - optind, argv + optind);
+    use_argv = get_cs_argv(argv[0], &target_path, argc - optind, argv + optind);
 
   } else {
 

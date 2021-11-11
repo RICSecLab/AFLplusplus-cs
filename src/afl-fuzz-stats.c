@@ -1239,7 +1239,9 @@ void show_init_stats(afl_state_t *afl) {
 
   // SAYF("\n");
 
-  if (avg_us > ((afl->fsrv.cs_mode || afl->fsrv.qemu_mode || afl->unicorn_mode) ? 50000 : 10000)) {
+  if (avg_us > ((afl->fsrv.cs_mode || afl->fsrv.qemu_mode || afl->unicorn_mode)
+                    ? 50000
+                    : 10000)) {
 
     WARNF(cLRD "The target binary is pretty slow! See %s/perf_tips.md.",
           doc_path);

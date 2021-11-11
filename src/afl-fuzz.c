@@ -435,7 +435,8 @@ int main(int argc, char **argv_orig, char **envp) {
 
   while ((opt = getopt(
               argc, argv,
-              "+Ab:B:c:CdDe:E:hi:I:f:F:l:L:m:M:nNOo:p:RQs:S:t:T:UV:Wx:Z")) > 0) {
+              "+Ab:B:c:CdDe:E:hi:I:f:F:l:L:m:M:nNOo:p:RQs:S:t:T:UV:Wx:Z")) >
+         0) {
 
     switch (opt) {
 
@@ -1662,8 +1663,8 @@ int main(int argc, char **argv_orig, char **envp) {
 
     }
 
-    if (!afl->fsrv.qemu_mode && !afl->fsrv.frida_mode &&
-        !afl->fsrv.cs_mode && !afl->non_instrumented_mode) {
+    if (!afl->fsrv.qemu_mode && !afl->fsrv.frida_mode && !afl->fsrv.cs_mode &&
+        !afl->non_instrumented_mode) {
 
       check_binary(afl, afl->cmplog_binary);
 
@@ -1710,8 +1711,8 @@ int main(int argc, char **argv_orig, char **envp) {
 
   } else if (afl->fsrv.cs_mode) {
 
-      use_argv = get_cs_argv(argv[0], &afl->fsrv.target_path, argc - optind,
-                               argv + optind);
+    use_argv = get_cs_argv(argv[0], &afl->fsrv.target_path, argc - optind,
+                           argv + optind);
 
   } else {
 
@@ -1720,8 +1721,7 @@ int main(int argc, char **argv_orig, char **envp) {
   }
 
   if (afl->non_instrumented_mode || afl->fsrv.qemu_mode ||
-      afl->fsrv.frida_mode || afl->fsrv.cs_mode ||
-      afl->unicorn_mode) {
+      afl->fsrv.frida_mode || afl->fsrv.cs_mode || afl->unicorn_mode) {
 
     map_size = afl->fsrv.real_map_size = afl->fsrv.map_size = MAP_SIZE;
     afl->virgin_bits = ck_realloc(afl->virgin_bits, map_size);
@@ -1803,8 +1803,8 @@ int main(int argc, char **argv_orig, char **envp) {
     if ((map_size <= DEFAULT_SHMEM_SIZE ||
          afl->cmplog_fsrv.map_size < map_size) &&
         !afl->non_instrumented_mode && !afl->fsrv.qemu_mode &&
-        !afl->fsrv.frida_mode && !afl->unicorn_mode &&
-        !afl->fsrv.cs_mode && !afl->afl_env.afl_skip_bin_check) {
+        !afl->fsrv.frida_mode && !afl->unicorn_mode && !afl->fsrv.cs_mode &&
+        !afl->afl_env.afl_skip_bin_check) {
 
       afl->cmplog_fsrv.map_size = MAX(map_size, (u32)DEFAULT_SHMEM_SIZE);
       char vbuf[16];
