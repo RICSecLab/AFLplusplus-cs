@@ -62,4 +62,4 @@ There are AFL++ CoreSight mode-specific environment variables for run-time confi
 
 ## Acknowledgements
 
-This project has received funding from the Acquisition, Technology & Logistics Agency (ATLA) under the National Security Technology Research Promotion Fund 2021 (JPJ004596).
+This project has received funding from the Acquisition, Technology & Logistics Agency (ATLA) under the Innovative Science and Technology Initiative for Security 2020 (JPJ004596).
